@@ -1,0 +1,38 @@
+# Netty-Heartbeat-Platform
+基于Netty的心跳监测平台
+几个常见的类
+
+ServerBootstrap
+netty服务器的帮助类
+
+NioEventLoopGroup
+处理I/O操作的多线程事件循环相当于一组线程池，服务器一般需要指定两个NioEventLoopGroup，一个作为监控tcp连接的，一个作为处理io事件的，前者默认1个线程就可以，后者最好是cpu核心数的2倍 客户端用一个就够了
+
+NioServerSocketChannel
+主要是server端接收建立SocketChannel用的
+
+NioSocketChannel
+主要是客户端接收SocketChannel用的
+
+ChannelInboundHandlerAdapter
+可以重写的各种事件处理程序方法,包括channelRead()、exceptionCaught()等方法
+
+SimpleChannelInboundHandler
+可以重写的各种事件处理程序方法,包括channelRead0()方法 这个可以跟指定的消息类型比上面的，如果自定义的消息类型用这个稍微多一点
+
+ChannelPipeline
+存放各种处理器，包括解码器，编码器等自定义处理器，idleStateHandler一定要放在第一个，传送数据时，编码器和解码器一定要放在前面，这个加载是分顺序的
+
+ChannelHandlerContext
+ChannelHandlerContext的writeAndFlush和ChannelHandlerContext.channel().writeAndFlush()是有区别的 前者是从当前hanler从后往前找OutputboundHandler，然后交给它执行的，后者是从最后一个开始执行handler的，最常见就是写错pipeline中的顺序后，客户端或服务器发消息就收不到了
+
+ChannelInitializer
+客户端和服务器都要用这个的SocketChannel，初始化的时候，加载ChannelPipeline
+
+Bootstrap
+客户端的连接帮助类
+
+idleStateHandler
+Netty 可以使用 IdleStateHandler 来实现连接管理，当连接空闲时间太长（没有发送、接收消息）时则会触发一个事件，我们便可在该事件中实现心跳机制
+
+基本以上的几个类就可以满足日常的80%需求了，剩下就是书写各自的业务
