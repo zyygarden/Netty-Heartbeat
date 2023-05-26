@@ -1,4 +1,4 @@
-# Netty-Heartbeat-Platform
+# Netty-Heartbeat
 基于Netty的心跳监测平台
 几个常见的类
 
